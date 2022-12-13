@@ -1,18 +1,19 @@
 use std::fmt::Debug;
 use structopt::StructOpt;
 
-mod cmd;
 mod maps;
+mod bench;
+mod workloads;
 
 
 #[derive(Debug, StructOpt)]
 enum Options {
-    Bench(cmd::bench::Options)
+    Bench(bench::Options)
 }
 
 
 fn main() {
     match Options::from_args() {
-        Options::Bench(options) => cmd::bench::run(&options),
+        Options::Bench(options) => bench::run(&options),
     }
 }
