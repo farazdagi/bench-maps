@@ -38,6 +38,10 @@ pub fn run(options: &Options) {
     bench::<RwLockBTreeMapTable<u64>>("RWLock<BTreeMap>", options, h);
 
     bench::<CHashMapTable<u64>>("CHashMapTable", options, h);
+
+    bench::<FlurryTable<u64, RandomState>>("Flurry - StdHasher", options, h);
+    bench::<FlurryTable<u64, FxBuildHasher>>("Flurry - FxHasher", options, h);
+    bench::<FlurryTable<u64, AhashRandomState>>("Flurry - AhashHasher", options, h);
 }
 
 fn bench<C>(name: &str, options: &Options, handler: &mut Handler)
