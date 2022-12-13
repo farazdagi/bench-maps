@@ -2,24 +2,20 @@ use std::fmt::Debug;
 use std::sync::Arc;
 use super::Value;
 use bustle::{Collection, CollectionHandle};
-use std::hash::{Hash, BuildHasher};
-use dashmap::DashMap;
+use std::hash::{Hash};
+use chashmap::CHashMap;
 
 #[derive(Clone)]
-pub struct DashMapTable<K, H>(Arc<DashMap<K, Value, H>>);
+pub struct CHashMapTable<K>(Arc<CHashMap<K, Value>>);
 
-impl<K, H> Collection for DashMapTable<K, H>
+impl<K> Collection for CHashMapTable<K>
     where
         K: Send + Sync + From<u64> + Copy + 'static + Hash + Eq + Debug,
-        H: BuildHasher + Default + Send + Sync + 'static + Clone,
 {
     type Handle = Self;
 
     fn with_capacity(capacity: usize) -> Self {
-        Self(Arc::new(DashMap::with_capacity_and_hasher(
-            capacity,
-            H::default(),
-        )))
+        Self(Arc::new(CHashMap::with_capacity(capacity)))
     }
 
     fn pin(&self) -> Self::Handle {
@@ -27,10 +23,9 @@ impl<K, H> Collection for DashMapTable<K, H>
     }
 }
 
-impl<K, H> CollectionHandle for DashMapTable<K, H>
+impl<K> CollectionHandle for CHashMapTable<K>
     where
-        K: Send + Sync + From<u64> + Copy + 'static + Hash + Eq + std::fmt::Debug,
-        H: BuildHasher + Default + Send + Sync + 'static + Clone,
+        K: Send + Sync + From<u64> + Copy + 'static + Hash + Eq + Debug,
 {
     type Key = K;
 
@@ -47,6 +42,11 @@ impl<K, H> CollectionHandle for DashMapTable<K, H>
     }
 
     fn update(&mut self, key: &Self::Key) -> bool {
-        self.0.get_mut(key).map(|mut v| *v += 1).is_some()
+        self.0
+            .get_mut(key)
+            .map(|mut r| {
+                *r += 1;
+            })
+            .is_some()
     }
 }

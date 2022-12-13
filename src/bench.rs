@@ -36,6 +36,8 @@ pub fn run(options: &Options) {
     bench::<RwLockStdHashMapTable<u64, AhashRandomState>>("RWLock<HashMap> - AhashHasher", options, h);
 
     bench::<RwLockBTreeMapTable<u64>>("RWLock<BTreeMap>", options, h);
+
+    bench::<CHashMapTable<u64>>("CHashMapTable", options, h);
 }
 
 fn bench<C>(name: &str, options: &Options, handler: &mut Handler)
