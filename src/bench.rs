@@ -3,6 +3,7 @@ use crate::workloads::{self, WorkloadKind};
 use bustle::{Collection, CollectionHandle, Measurement};
 use std::{fmt::Debug, thread::sleep, time::Duration};
 use std::collections::hash_map::RandomState;
+use ahash::RandomState as AhashRandomState;
 use crate::maps::*;
 use crossbeam_epoch;
 use fxhash::{FxBuildHasher};
@@ -22,11 +23,14 @@ pub fn run(options: &Options) {
 
     let h = &mut create_handler();
 
-    bench::<HashbrownHashMapTable<u64, RandomState>>("HashbrownHashMapTable", options, h);
-    bench::<RwLockStdHashMapTable<u64, RandomState>>("RWLock<StdHashMap>", options, h);
-    bench::<RwLockStdHashMapTable<u64, FxBuildHasher>>("RWLock<FxHashMap>", options, h);
-    bench::<DashMapTable<u64, RandomState>>("DashMap", options, h);
-    bench::<DashMapTable<u64, FxBuildHasher>>("FxDashMap", options, h);
+    bench::<HashbrownHashMapTable<u64, RandomState>>("HashbrownHashMap - StdHasher", options, h);
+    bench::<HashbrownHashMapTable<u64, AhashRandomState>>("HashbrownHashMap - AhashHasher", options, h);
+    bench::<RwLockStdHashMapTable<u64, RandomState>>("RWLock<HashMap> - StdHasher", options, h);
+    bench::<RwLockStdHashMapTable<u64, FxBuildHasher>>("RWLock<HashMap> - FxHasher", options, h);
+    bench::<RwLockStdHashMapTable<u64, AhashRandomState>>("RWLock<HashMap> - AhashHasher", options, h);
+    bench::<DashMapTable<u64, RandomState>>("DashMap - StdHasher", options, h);
+    bench::<DashMapTable<u64, FxBuildHasher>>("DashMap - FxHasher", options, h);
+    bench::<DashMapTable<u64, AhashRandomState>>("DashMap - AhashHasher", options, h);
 }
 
 fn bench<C>(name: &str, options: &Options, handler: &mut Handler)
@@ -59,7 +63,7 @@ fn create_handler() -> Handler {
     Box::new(|n, m: &Measurement| {
         eprintln!(
             "\tthreads={}\ttotal_ops={}\tspent={:.1?}\tlatency={:.2?}\tthroughput={} op/s",
-            n, m.total_ops, m.spent, m.latency, m.throughput.floor().separate_with_commas(),
+            n, m.total_ops.separate_with_commas(), m.spent, m.latency, m.throughput.floor().separate_with_commas(),
         )
     }) as Handler
 }
