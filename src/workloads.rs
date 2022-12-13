@@ -33,7 +33,7 @@ pub(crate) fn create(options: &Options, threads: usize) -> Workload {
                 upsert: 0,
             };
             *Workload::new(threads, mix)
-                .initial_capacity_log2(20)
+                .initial_capacity_log2(15)
                 .prefill_fraction(0.8)
         }
         WorkloadKind::WriteHeavy => {

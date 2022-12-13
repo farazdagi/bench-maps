@@ -23,14 +23,19 @@ pub fn run(options: &Options) {
 
     let h = &mut create_handler();
 
-    bench::<HashbrownHashMapTable<u64, RandomState>>("HashbrownHashMap - StdHasher", options, h);
-    bench::<HashbrownHashMapTable<u64, AhashRandomState>>("HashbrownHashMap - AhashHasher", options, h);
-    bench::<RwLockStdHashMapTable<u64, RandomState>>("RWLock<HashMap> - StdHasher", options, h);
-    bench::<RwLockStdHashMapTable<u64, FxBuildHasher>>("RWLock<HashMap> - FxHasher", options, h);
-    bench::<RwLockStdHashMapTable<u64, AhashRandomState>>("RWLock<HashMap> - AhashHasher", options, h);
     bench::<DashMapTable<u64, RandomState>>("DashMap - StdHasher", options, h);
     bench::<DashMapTable<u64, FxBuildHasher>>("DashMap - FxHasher", options, h);
     bench::<DashMapTable<u64, AhashRandomState>>("DashMap - AhashHasher", options, h);
+
+    bench::<HashbrownHashMapTable<u64, RandomState>>("HashbrownHashMap - StdHasher", options, h);
+    bench::<HashbrownHashMapTable<u64, FxBuildHasher>>("HashbrownHashMap - FxHasher", options, h);
+    bench::<HashbrownHashMapTable<u64, AhashRandomState>>("HashbrownHashMap - AhashHasher", options, h);
+
+    bench::<RwLockStdHashMapTable<u64, RandomState>>("RWLock<HashMap> - StdHasher", options, h);
+    bench::<RwLockStdHashMapTable<u64, FxBuildHasher>>("RWLock<HashMap> - FxHasher", options, h);
+    bench::<RwLockStdHashMapTable<u64, AhashRandomState>>("RWLock<HashMap> - AhashHasher", options, h);
+
+    bench::<RwLockBTreeMapTable<u64>>("RWLock<BTreeMap>", options, h);
 }
 
 fn bench<C>(name: &str, options: &Options, handler: &mut Handler)
