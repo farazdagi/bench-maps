@@ -72,7 +72,7 @@ type Handler = Box<dyn FnMut(u32, &Measurement)>;
 
 fn create_handler() -> Handler {
     Box::new(|n, m: &Measurement| {
-        eprintln!(
+        println!(
             "\tthreads={}\ttotal_ops={}\tspent={:.1?}\tlatency={:.2?}\tthroughput={} op/s",
             n, m.total_ops.separate_with_commas(), m.spent, m.latency, m.throughput.floor().separate_with_commas(),
         )
