@@ -12,6 +12,7 @@
     - Read-heavy: (read: 98%; insert: 1%; remove: 1%)
     - Write-heavy: (read: 5%; insert: 80%; remove: 5%; update: 10%)
     - Mixed: (read: 10%; insert: 40%; remove: 40%; update: 10%)
+- In each workload, total number of operations was capped at ~34M.
 - All hashers were used in both single-threaded and multi-threaded mode (with 2^2..2^5 threads).
 - Machine was Core i9, 8 kernels, 16 cpu.
 - Crates tested:
