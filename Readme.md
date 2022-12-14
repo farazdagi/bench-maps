@@ -31,6 +31,7 @@
       is [erb](https://github.com/komora-io/concurrent-map/blob/main/src/lib.rs#L343) which relies on RefCell
       internally.
     - Overall, as the whole sled project, this thing seems to be still of a beta-version quality.
+- To run: `cargo run bench --workload ReadHeavy|WriteHeavy|Mixed` (tests below were run on optimized/release binary).
 
 ## Read-heavy workload
 
